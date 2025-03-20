@@ -1,14 +1,13 @@
-"use client";
-
 import { TextField, InputAdornment } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 
 interface NameFieldProps {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
 }
 
-const NameField: React.FC<NameFieldProps> = ({ value, onChange }) => (
+const NameField: React.FC<NameFieldProps> = ({ value, onChange ,error}) => (
   <TextField
     fullWidth
     required
@@ -17,6 +16,8 @@ const NameField: React.FC<NameFieldProps> = ({ value, onChange }) => (
     value={value}
     onChange={onChange}
     margin="normal"
+    error={!!error} 
+    helperText={error}
     InputProps={{
       startAdornment: (
         <InputAdornment position="start">

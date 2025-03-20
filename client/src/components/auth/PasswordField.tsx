@@ -8,8 +8,9 @@ import React, { useState } from 'react';
 interface PasswordFieldProps {
     value: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    error?: string;
   }
-const PasswordField:React.FC<PasswordFieldProps> = ({ value, onChange }) => {
+const PasswordField:React.FC<PasswordFieldProps> = ({ value, onChange,error }) => {
   const [showPassword, setShowPassword] = useState(false);
   
   return (
@@ -22,6 +23,8 @@ const PasswordField:React.FC<PasswordFieldProps> = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       margin="normal"
+      error={!!error} 
+      helperText={error}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
