@@ -4,6 +4,8 @@ import { registerUser, loginUser } from "@/lib/api/authApi";
 import { authSchema, AuthSchemaType } from "@/lib/api/signupValidation";
 import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/slices/userSlice";
 
 
 export const useAuthForm = (type: "signup" | "signin") => {
@@ -12,6 +14,7 @@ export const useAuthForm = (type: "signup" | "signin") => {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch()
   const [errors, setErrors] = useState<Partial<AuthSchemaType>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -45,6 +48,7 @@ export const useAuthForm = (type: "signup" | "signin") => {
         const res = await loginUser(formData);
         if (res.status === 200) {
             setSuccessMessage("Login successful!");
+            dispatch(login({ user: res.data }));
             router.push("/chat");
         }
         console.log(res);

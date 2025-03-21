@@ -12,6 +12,9 @@ import {
 import GroupIcon from "@mui/icons-material/Group";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { GroupMember } from "../../interface/Ichat";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { logout } from "@/redux/slices/userSlice";
 
 interface ChatHeaderProps {
   groupMembers: GroupMember[];
@@ -26,6 +29,12 @@ const ChatHeader = ({
   anchorEl,
   handleMenuClose,
 }: ChatHeaderProps) => {
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const handleLogout = () => {
+        dispatch(logout()); 
+        router.push("/auth/signin"); 
+      };
   return (
     <Paper
       sx={{
@@ -95,7 +104,7 @@ const ChatHeader = ({
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Box>
     </Paper>

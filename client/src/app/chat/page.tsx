@@ -1,7 +1,10 @@
 "use client";
 
 import ChatApp from "@/components/chat/ChatApp";
+import withAuth from "../../utils/WithAuth";
 
-export default function ChatPage() {
+function ChatPage() {
   return <ChatApp />;
 }
+
+export default withAuth(ChatPage);
