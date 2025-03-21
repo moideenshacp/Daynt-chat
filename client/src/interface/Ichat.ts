@@ -6,7 +6,7 @@ export interface Message {
     sender: string | undefined;
     timestamp: Date;
     isCurrentUser?: boolean;
-    file?: File | null;
+    file?: File | null | string;
   }
   
   export interface GroupMember {
@@ -17,14 +17,11 @@ export interface Message {
   }
 
   export interface ChatMainProps {
-    messages: Message[];
     message: string;
     setMessage: (message: string) => void;
-    handleSendMessage: () => void;
     handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     file: File | null;
     setFile: (file: File | null) => void;
-    groupMembers: GroupMember[];
   }
 
   

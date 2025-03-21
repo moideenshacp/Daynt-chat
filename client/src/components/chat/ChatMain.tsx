@@ -5,28 +5,28 @@ import {
   Paper,
   IconButton,
   TextField,
-  Typography
+  Typography,
+  CircularProgress,
 } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
-import {  ChatMainProps } from "../../interface/Ichat";
+import { ChatMainProps } from "../../interface/Ichat";
 import ChatHeader from "./ChatHeader";
 import MessagesList from "./MessageList";
 import { useSocket } from "@/context/SocketContext";
 
 const ChatMain = ({
-  messages,
   message,
   setMessage,
   handleFileChange,
   file,
   setFile,
 }: ChatMainProps) => {
-
-    const {sendMessage} = useSocket()
+  const { sendMessage, messages } = useSocket();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
+  const [loading, setLoading] = useState(false);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -37,7 +37,7 @@ const ChatMain = ({
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       sendMessage(message);
-      setMessage("")
+      setMessage("");
     }
   };
 
@@ -48,20 +48,29 @@ const ChatMain = ({
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+  const handleSendMessage = async () => {
+    if (!message.trim() && !file) return;
+    setLoading(true); // Set loading state
 
+    await sendMessage(message, file);
+
+    setMessage("");
+    setFile(null);
+    setLoading(false); // Reset loading state
+  };
   return (
     <Box flex={1} display="flex" flexDirection="column">
       {/* Chat header */}
-      <ChatHeader 
-        handleMenuOpen={handleMenuOpen} 
-        anchorEl={anchorEl} 
-        handleMenuClose={handleMenuClose} 
+      <ChatHeader
+        handleMenuOpen={handleMenuOpen}
+        anchorEl={anchorEl}
+        handleMenuClose={handleMenuClose}
       />
 
       {/* Messages area */}
-      <MessagesList 
-        messagesEndRef={messagesEndRef} 
-        messageContainerRef={messageContainerRef} 
+      <MessagesList
+        messagesEndRef={messagesEndRef}
+        messageContainerRef={messageContainerRef}
       />
 
       {/* Input Section */}
@@ -135,14 +144,19 @@ const ChatMain = ({
         )}
         <IconButton
           color="primary"
-          onClick={()=>sendMessage(message)}
+          onClick={handleSendMessage}
+          disabled={loading} // Disable button while sending
           sx={{
             bgcolor: "#25D366",
             color: "white",
             "&:hover": { bgcolor: "#128C7E" },
           }}
         >
-          <SendIcon />
+          {loading ? (
+            <CircularProgress size={24} sx={{ color: "white" }} />
+          ) : (
+            <SendIcon />
+          )}
         </IconButton>
       </Paper>
     </Box>

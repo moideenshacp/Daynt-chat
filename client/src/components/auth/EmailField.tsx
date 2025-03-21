@@ -1,15 +1,12 @@
-
-
-import { TextField, InputAdornment } from '@mui/material';
-import EmailIcon from '@mui/icons-material/Email';
-
+import { TextField, InputAdornment } from "@mui/material";
+import EmailIcon from "@mui/icons-material/Email";
 
 interface EmailFieldProps {
-    value: string;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    error?: string;
-  }
-const EmailField:React.FC<EmailFieldProps> = ({ value, onChange,error }) => (
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
+}
+const EmailField: React.FC<EmailFieldProps> = ({ value, onChange, error }) => (
   <TextField
     fullWidth
     required
@@ -18,7 +15,7 @@ const EmailField:React.FC<EmailFieldProps> = ({ value, onChange,error }) => (
     value={value}
     onChange={onChange}
     margin="normal"
-    error={!!error} 
+    error={!!error}
     helperText={error}
     InputProps={{
       startAdornment: (

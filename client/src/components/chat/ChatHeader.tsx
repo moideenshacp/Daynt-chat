@@ -15,6 +15,8 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { logout } from "@/redux/slices/userSlice";
 import { useSocket } from "@/context/SocketContext";
+import LogoutIcon from "@mui/icons-material/Logout";
+
 
 interface ChatHeaderProps {
   handleMenuOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -27,14 +29,14 @@ const ChatHeader = ({
   anchorEl,
   handleMenuClose,
 }: ChatHeaderProps) => {
-    const dispatch = useDispatch();
-    const router = useRouter();
-        const {connectedUsers} = useSocket()
-    
-    const handleLogout = () => {
-        dispatch(logout()); 
-        router.push("/auth/signin"); 
-      };
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { connectedUsers } = useSocket();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/auth/signin");
+  };
   return (
     <Paper
       sx={{
@@ -90,23 +92,56 @@ const ChatHeader = ({
         </Box>
       </Box>
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <IconButton onClick={handleMenuOpen} sx={{ marginLeft: "auto" }}>
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-        >
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </Menu>
-      </Box>
+  sx={{
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    position: "relative",
+  }}
+>
+  <IconButton 
+    onClick={handleMenuOpen} 
+    sx={{
+      bgcolor: "#f0f2f5",
+      "&:hover": { bgcolor: "#e0e0e0" },
+      transition: "all 0.3s ease-in-out",
+    }}
+  >
+    <MoreVertIcon sx={{ color: "#555" }} />
+  </IconButton>
+
+  <Menu
+    anchorEl={anchorEl}
+    open={Boolean(anchorEl)}
+    onClose={handleMenuClose}
+    sx={{
+      mt: 1,
+      "& .MuiPaper-root": {
+        borderRadius: 2,
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+        minWidth: 150,
+        backgroundColor: "#fff",
+      },
+    }}
+  >
+    <MenuItem 
+      onClick={handleLogout}
+      sx={{
+        color: "#d32f2f",
+        fontWeight: "bold",
+        "&:hover": { 
+          bgcolor: "#ffebee", 
+          color: "#b71c1c",
+        },
+        transition: "all 0.2s ease-in-out",
+      }}
+    >
+      <LogoutIcon sx={{ mr: 1, color: "#d32f2f" }} />
+      Logout
+    </MenuItem>
+  </Menu>
+</Box>
+
     </Paper>
   );
 };

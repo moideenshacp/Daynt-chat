@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 import { registerUser, loginUser } from "@/lib/api/authApi";
 import { authSchema, AuthSchemaType } from "@/lib/validation/signupValidation";
@@ -7,14 +7,13 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/userSlice";
 
-
 export const useAuthForm = (type: "signup" | "signin") => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [errors, setErrors] = useState<Partial<AuthSchemaType>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -39,22 +38,20 @@ export const useAuthForm = (type: "signup" | "signin") => {
         authSchema.parse(formData);
         const res = await registerUser(formData);
         if (res.status === 201) {
-            setSuccessMessage("Registered successfully! Now login.");
-            setTimeout(() => {
-              router.push("/auth/signin");
-            }, 1000);
+          setSuccessMessage("Registered successfully! Now login.");
+          setTimeout(() => {
+            router.push("/auth/signin");
+          }, 1000);
         }
       } else {
         const res = await loginUser(formData);
         if (res.status === 200) {
-            setSuccessMessage("Login successful!");
-            dispatch(login({ user: res.data }));
-            router.push("/chat");
+          setSuccessMessage("Login successful!");
+          dispatch(login({ user: res.data }));
+          router.push("/chat");
         }
-        console.log(res);
       }
     } catch (error) {
-      console.log(error);
       if (error instanceof ZodError) {
         const formattedErrors = error.flatten().fieldErrors;
         setErrors({
@@ -66,9 +63,17 @@ export const useAuthForm = (type: "signup" | "signin") => {
         setGeneralError(error.message);
       }
     } finally {
-        setLoading(false);
-      }
+      setLoading(false);
+    }
   };
 
-  return { formData, handleChange, handleSubmit, errors, generalError,successMessage,loading  };
+  return {
+    formData,
+    handleChange,
+    handleSubmit,
+    errors,
+    generalError,
+    successMessage,
+    loading,
+  };
 };

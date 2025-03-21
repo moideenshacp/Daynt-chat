@@ -7,16 +7,14 @@ import {
   Divider,
   List,
   ListItem,
-  Badge
+  Badge,
 } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import { useSocket } from "@/context/SocketContext";
 
-
 const ChatSidebar = () => {
+  const { connectedUsers } = useSocket();
 
-    const {connectedUsers} = useSocket()
-    
   return (
     <Paper
       sx={{
@@ -77,9 +75,7 @@ const ChatSidebar = () => {
             }}
             disablePadding
           >
-            <Box
-              sx={{ display: "flex", width: "100%", alignItems: "center" }}
-            >
+            <Box sx={{ display: "flex", width: "100%", alignItems: "center" }}>
               <Badge
                 overlap="circular"
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

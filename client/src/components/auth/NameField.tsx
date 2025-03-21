@@ -7,7 +7,7 @@ interface NameFieldProps {
   error?: string;
 }
 
-const NameField: React.FC<NameFieldProps> = ({ value, onChange ,error}) => (
+const NameField: React.FC<NameFieldProps> = ({ value, onChange, error }) => (
   <TextField
     fullWidth
     required
@@ -16,7 +16,7 @@ const NameField: React.FC<NameFieldProps> = ({ value, onChange ,error}) => (
     value={value}
     onChange={onChange}
     margin="normal"
-    error={!!error} 
+    error={!!error}
     helperText={error}
     InputProps={{
       startAdornment: (

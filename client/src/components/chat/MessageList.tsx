@@ -5,26 +5,25 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 import { MessagesListProps } from "@/interface/Ichat";
 import { useSocket } from "@/context/SocketContext";
+import { isImageFile } from "@/utils/fileUtil";
+import Image from "next/image";
 
 const MessagesList = ({
-    messagesEndRef,
-    messageContainerRef,
-  }: MessagesListProps) => {
-    const { messages } = useSocket();
+  messagesEndRef,
+  messageContainerRef,
+}: MessagesListProps) => {
+  const { messages } = useSocket();
 
   // Scroll to the latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages,messagesEndRef]);
+  }, [messages, messagesEndRef]);
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
   const formatDate = (date: Date) => {
-
-    console.log(date,"dataaaa");
-    
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
@@ -143,17 +142,40 @@ const MessagesList = ({
                         alignItems: "center",
                       }}
                     >
-                      <AttachFileIcon fontSize="small" sx={{ mr: 1 }} />
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          flex: 1,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {msg.file.name}
-                      </Typography>
+                      {typeof msg.file === "string" && isImageFile(msg.file) ? (
+                        <Image
+                          src={msg.file}
+                          alt="Sent file"
+                          width={300} // Set  width
+                          height={200} // Set  height
+                          style={{ borderRadius: 8, objectFit: "contain" }}
+                          priority
+                        />
+                      ) : (
+                        <>
+                          <AttachFileIcon fontSize="small" sx={{ mr: 1 }} />
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              flex: 1,
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {typeof msg.file === "string" ? (
+                              <a
+                                href={msg.file}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {msg.file.split("/").pop()}
+                              </a>
+                            ) : (
+                              <span>File uploaded</span>
+                            )}
+                          </Typography>
+                        </>
+                      )}
                     </Box>
                   )}
 

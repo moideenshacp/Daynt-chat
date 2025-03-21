@@ -28,10 +28,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
     errors,
     generalError,
     successMessage,
-    loading 
+    loading,
   } = useAuthForm(type);
   const [open, setOpen] = useState(false);
-  console.log(successMessage);
   useEffect(() => {
     if (successMessage) {
       setOpen(true);
@@ -73,7 +72,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               onChange={handleChange}
               error={errors.password}
             />
-            <SubmitButton type={type} loading ={loading } />
+            <SubmitButton type={type} loading={loading} />
           </Box>
           {type === "signup" && (
             <Typography
