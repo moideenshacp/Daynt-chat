@@ -12,17 +12,18 @@ import SendIcon from "@mui/icons-material/Send";
 import {  ChatMainProps } from "../../interface/Ichat";
 import ChatHeader from "./ChatHeader";
 import MessagesList from "./MessageList";
+import { useSocket } from "@/context/SocketContext";
 
 const ChatMain = ({
   messages,
   message,
   setMessage,
-  handleSendMessage,
   handleFileChange,
   file,
   setFile,
-  groupMembers,
 }: ChatMainProps) => {
+
+    const {sendMessage} = useSocket()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
@@ -35,7 +36,8 @@ const ChatMain = ({
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
-      handleSendMessage();
+      sendMessage(message);
+      setMessage("")
     }
   };
 
@@ -51,7 +53,6 @@ const ChatMain = ({
     <Box flex={1} display="flex" flexDirection="column">
       {/* Chat header */}
       <ChatHeader 
-        groupMembers={groupMembers} 
         handleMenuOpen={handleMenuOpen} 
         anchorEl={anchorEl} 
         handleMenuClose={handleMenuClose} 
@@ -59,7 +60,6 @@ const ChatMain = ({
 
       {/* Messages area */}
       <MessagesList 
-        messages={messages} 
         messagesEndRef={messagesEndRef} 
         messageContainerRef={messageContainerRef} 
       />
@@ -135,7 +135,7 @@ const ChatMain = ({
         )}
         <IconButton
           color="primary"
-          onClick={handleSendMessage}
+          onClick={()=>sendMessage(message)}
           sx={{
             bgcolor: "#25D366",
             color: "white",

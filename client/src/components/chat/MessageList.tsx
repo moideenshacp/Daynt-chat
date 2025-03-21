@@ -1,18 +1,30 @@
 "use client";
+import { useEffect } from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import {  MessagesListProps } from "../../interface/Ichat";
+
+import { MessagesListProps } from "@/interface/Ichat";
+import { useSocket } from "@/context/SocketContext";
 
 const MessagesList = ({
-  messages,
-  messagesEndRef,
-  messageContainerRef,
-}: MessagesListProps) => {
+    messagesEndRef,
+    messageContainerRef,
+  }: MessagesListProps) => {
+    const { messages } = useSocket();
+
+  // Scroll to the latest message
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages,messagesEndRef]);
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
   const formatDate = (date: Date) => {
+
+    console.log(date,"dataaaa");
+    
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
@@ -39,10 +51,6 @@ const MessagesList = ({
         overflowY: "auto",
         display: "flex",
         flexDirection: "column",
-        backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e5e5f7' fill-opacity='0.2' fill-rule='evenodd'%3E%3Ccircle cx='24' cy='24' r='3'/%3E%3Ccircle cx='52' cy='52' r='3'/%3E%3C/g%3E%3C/svg%3E\")",
-        backgroundRepeat: "repeat",
-        backgroundPosition: "center",
         bgcolor: "#efeae2",
       }}
     >
@@ -56,7 +64,7 @@ const MessagesList = ({
           return (
             <Box key={msg.id} sx={{ width: "100%" }}>
               {showDateSeparator && (
-                <Box sx={{ textAlign: "center", my: 2, position: "relative" }}>
+                <Box sx={{ textAlign: "center", my: 2 }}>
                   <Typography
                     variant="caption"
                     sx={{
@@ -77,9 +85,7 @@ const MessagesList = ({
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: msg.isCurrentUser
-                    ? "flex-end"
-                    : "flex-start",
+                  justifyContent: msg.isCurrentUser ? "flex-end" : "flex-start",
                   mb: 1.5,
                   width: "100%",
                 }}
@@ -94,7 +100,7 @@ const MessagesList = ({
                       bgcolor: "#1976d2",
                     }}
                   >
-                    {msg.sender.charAt(0)}
+                    {msg?.sender?.charAt(0)}
                   </Avatar>
                 )}
 
@@ -162,7 +168,7 @@ const MessagesList = ({
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ fontSize: 11, mr: msg.isCurrentUser ? 0.5 : 0 }}
+                      sx={{ fontSize: 11 }}
                     >
                       {formatTime(msg.timestamp)}
                     </Typography>

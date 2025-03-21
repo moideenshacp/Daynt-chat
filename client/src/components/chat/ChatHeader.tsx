@@ -11,26 +11,26 @@ import {
 } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { GroupMember } from "../../interface/Ichat";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { logout } from "@/redux/slices/userSlice";
+import { useSocket } from "@/context/SocketContext";
 
 interface ChatHeaderProps {
-  groupMembers: GroupMember[];
   handleMenuOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
   anchorEl: null | HTMLElement;
   handleMenuClose: () => void;
 }
 
 const ChatHeader = ({
-  groupMembers,
   handleMenuOpen,
   anchorEl,
   handleMenuClose,
 }: ChatHeaderProps) => {
     const dispatch = useDispatch();
     const router = useRouter();
+        const {connectedUsers} = useSocket()
+    
     const handleLogout = () => {
         dispatch(logout()); 
         router.push("/auth/signin"); 
@@ -71,7 +71,7 @@ const ChatHeader = ({
               },
             }}
           >
-            {groupMembers.map((member) => (
+            {connectedUsers.map((member) => (
               <Avatar
                 key={member.id}
                 sx={{
@@ -85,7 +85,7 @@ const ChatHeader = ({
             ))}
           </AvatarGroup>
           <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-            {groupMembers.length} online
+            {connectedUsers.length} online
           </Typography>
         </Box>
       </Box>

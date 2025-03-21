@@ -3,17 +3,16 @@ import { RefObject } from "react";
 export interface Message {
     id: number;
     text: string;
-    sender: string;
+    sender: string | undefined;
     timestamp: Date;
-    isCurrentUser: boolean;
+    isCurrentUser?: boolean;
     file?: File | null;
-    status: "sent" | "delivered" | "read";
   }
   
   export interface GroupMember {
-    id: number;
+    id?: number | string;
     name: string;
-    avatar: string;
+    avatar?: string;
     role?: "admin" | "member";
   }
 
@@ -30,7 +29,6 @@ export interface Message {
 
   
 export interface MessagesListProps {
-    messages: Message[];
     messagesEndRef: RefObject<HTMLDivElement | null>;
     messageContainerRef: RefObject<HTMLDivElement | null>;
   }

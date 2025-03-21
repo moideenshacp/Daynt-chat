@@ -10,13 +10,13 @@ import {
   Badge
 } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
-import { GroupMember } from "../../interface/Ichat";
+import { useSocket } from "@/context/SocketContext";
 
-interface ChatSidebarProps {
-  groupMembers: GroupMember[];
-}
 
-const ChatSidebar = ({ groupMembers }: ChatSidebarProps) => {
+const ChatSidebar = () => {
+
+    const {connectedUsers} = useSocket()
+    
   return (
     <Paper
       sx={{
@@ -61,11 +61,11 @@ const ChatSidebar = ({ groupMembers }: ChatSidebarProps) => {
         color="text.secondary"
         sx={{ px: 2, py: 1.5 }}
       >
-        ACTIVE MEMBERS - {groupMembers.length}
+        ACTIVE MEMBERS - {connectedUsers.length}
       </Typography>
 
       <List sx={{ overflow: "auto", flex: 1, pt: 0 }}>
-        {groupMembers.map((member) => (
+        {connectedUsers.map((member) => (
           <ListItem
             key={member.id}
             sx={{

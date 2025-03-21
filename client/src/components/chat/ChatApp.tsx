@@ -14,7 +14,6 @@ const ChatApp = () => {
       sender: "Alice",
       timestamp: new Date(Date.now() - 86400000), // 1 day ago
       isCurrentUser: false,
-      status: "read",
     },
   ]);
   const [file, setFile] = useState<File | null>(null);
@@ -51,7 +50,6 @@ const ChatApp = () => {
         timestamp: new Date(),
         isCurrentUser: true,
         file: file,
-        status: "sent",
       };
 
       setMessages([...messages, newMessage]);
@@ -74,7 +72,7 @@ const ChatApp = () => {
       sx={{ flexDirection: { xs: "column", md: "row" } }}
     >
       {showSidebar && (
-        <ChatSidebar groupMembers={groupMembers} />
+        <ChatSidebar  />
       )}
       <ChatMain
         messages={messages}

@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import { registerUser, loginUser } from "@/lib/api/authApi";
-import { authSchema, AuthSchemaType } from "@/lib/api/signupValidation";
+import { authSchema, AuthSchemaType } from "@/lib/validation/signupValidation";
 import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
