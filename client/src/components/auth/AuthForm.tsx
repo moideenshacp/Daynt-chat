@@ -1,20 +1,42 @@
 "use client";
 
-import { Box, Paper, Typography, Container } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Typography,
+  Container,
+  Alert,
+  Snackbar,
+} from "@mui/material";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import NameField from "./NameField";
 import EmailField from "./EmailField";
 import PasswordField from "./PasswordField";
 import SubmitButton from "./SubmitButton";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface AuthFormProps {
   type: "signup" | "signin";
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
-  const { formData, handleChange, handleSubmit,errors } = useAuthForm(type);
-
+  const {
+    formData,
+    handleChange,
+    handleSubmit,
+    errors,
+    generalError,
+    successMessage,
+    loading 
+  } = useAuthForm(type);
+  const [open, setOpen] = useState(false);
+  console.log(successMessage);
+  useEffect(() => {
+    if (successMessage) {
+      setOpen(true);
+    }
+  }, [successMessage]);
   return (
     <Container maxWidth="sm" sx={{ mt: 13, mb: 8 }}>
       <Paper elevation={3} sx={{ borderRadius: 2 }}>
@@ -28,14 +50,30 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               ? "Join us today and have fun"
               : "Welcome back! Please sign in"}
           </Typography>
-
+          {generalError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {generalError}
+            </Alert>
+          )}
           <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
             {type === "signup" && (
-              <NameField value={formData.name} onChange={handleChange} error={errors.name} />
+              <NameField
+                value={formData.name}
+                onChange={handleChange}
+                error={errors.name}
+              />
             )}
-            <EmailField value={formData.email} onChange={handleChange} error={errors.email} />
-            <PasswordField value={formData.password} onChange={handleChange} error={errors.password} />
-            <SubmitButton type={type} />
+            <EmailField
+              value={formData.email}
+              onChange={handleChange}
+              error={errors.email}
+            />
+            <PasswordField
+              value={formData.password}
+              onChange={handleChange}
+              error={errors.password}
+            />
+            <SubmitButton type={type} loading ={loading } />
           </Box>
           {type === "signup" && (
             <Typography
@@ -77,6 +115,21 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               </Link>
             </Typography>
           )}
+
+          <Snackbar
+            open={open}
+            autoHideDuration={3000}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert
+              onClose={() => setOpen(false)}
+              severity="success"
+              variant="filled"
+            >
+              {successMessage}
+            </Alert>
+          </Snackbar>
         </Box>
       </Paper>
     </Container>

@@ -1,7 +1,10 @@
+"use client"
 import { useState } from "react";
 import { registerUser, loginUser } from "@/lib/api/authApi";
 import { authSchema, AuthSchemaType } from "@/lib/api/signupValidation";
 import { ZodError } from "zod";
+import { useRouter } from "next/navigation";
+
 
 export const useAuthForm = (type: "signup" | "signin") => {
   const [formData, setFormData] = useState({
@@ -10,24 +13,44 @@ export const useAuthForm = (type: "signup" | "signin") => {
     password: "",
   });
   const [errors, setErrors] = useState<Partial<AuthSchemaType>>({});
-
+  const [generalError, setGeneralError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
     }));
-    setErrors({})
+    setErrors({});
+    setGeneralError(null);
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
+    setGeneralError(null);
+    setLoading(true);
 
     try {
-      authSchema.parse(formData);
-
-      if (type === "signup") await registerUser(formData);
-      else await loginUser(formData);
+      if (type === "signup") {
+        authSchema.parse(formData);
+        const res = await registerUser(formData);
+        if (res.status === 201) {
+            setSuccessMessage("Registered successfully! Now login.");
+            setTimeout(() => {
+              router.push("/auth/signin");
+            }, 1000);
+        }
+      } else {
+        const res = await loginUser(formData);
+        if (res.status === 200) {
+            setSuccessMessage("Login successful!");
+            router.push("/chat");
+        }
+        console.log(res);
+      }
     } catch (error) {
+      console.log(error);
       if (error instanceof ZodError) {
         const formattedErrors = error.flatten().fieldErrors;
         setErrors({
@@ -35,11 +58,13 @@ export const useAuthForm = (type: "signup" | "signin") => {
           email: formattedErrors.email?.[0] || "",
           password: formattedErrors.password?.[0] || "",
         });
+      } else if (error instanceof Error) {
+        setGeneralError(error.message);
       }
-    }
-
-    console.log("formdata", formData);
+    } finally {
+        setLoading(false);
+      }
   };
 
-  return { formData, handleChange, handleSubmit, errors };
+  return { formData, handleChange, handleSubmit, errors, generalError,successMessage,loading  };
 };
