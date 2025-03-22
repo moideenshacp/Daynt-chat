@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 
+//fetch all message when loading
 export const fetchMessages = async () => {
   try {
     const res = await axios.get(
@@ -21,6 +22,8 @@ export const fetchMessages = async () => {
   }
 };
 
+
+//upload file to cloudinary
 export const uploadFile = async (file: File) => {
   try {
     const formData = new FormData();

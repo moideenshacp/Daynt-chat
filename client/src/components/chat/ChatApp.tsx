@@ -10,7 +10,7 @@ const ChatApp = () => {
   const [showSidebar] = useState(true);
 
 
-
+//handling input file change
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
   

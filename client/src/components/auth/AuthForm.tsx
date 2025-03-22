@@ -37,7 +37,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
     }
   }, [successMessage]);
   return (
-    <Container maxWidth="sm" sx={{ mt: 13, mb: 8 }}>
+    <Container maxWidth="sm" sx={{ mt: 15, mb: 8 }}>
       <Paper elevation={3} sx={{ borderRadius: 2 }}>
         <Box sx={{ p: 4, textAlign: "center" }}>
           <Typography variant="h4" fontWeight={700} sx={{ mb: 2 }}>

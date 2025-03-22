@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useState, useRef, useEffect } from "react";
 import {
@@ -33,21 +34,35 @@ const ChatMain = ({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
+
+  //handling enter press
+  const handleKeyPress = async (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
-      sendMessage(message);
+
+      if (!message.trim() && !file) return;
+
+      setLoading(true);
+      await sendMessage(message.trim() || "", file);
       setMessage("");
+      setFile(null);
+      setLoading(false);
     }
   };
 
+
+  //menu opening
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+
+//menu closing
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  //handling send message for socket io
   const handleSendMessage = async () => {
     if (!message.trim() && !file) return;
     setLoading(true); // Set loading state
@@ -73,6 +88,39 @@ const ChatMain = ({
         messageContainerRef={messageContainerRef}
       />
 
+      {file && (
+        <Box
+          sx={{
+            justifycontent: "flex-end",
+            bottom: 70,
+            left: 20,
+            right: 20,
+            bgcolor: "white",
+            p: 2,
+            boxShadow: 3,
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          {file.type.startsWith("image/") ? ( // Check if file is an image
+            <img
+              src={URL.createObjectURL(file)}
+              alt="Preview"
+              style={{ maxWidth: "100px", maxHeight: "100px", marginBottom: 5 }}
+            />
+          ) : (
+            <AttachFileIcon sx={{ mr: 1 }} />
+          )}
+          <Typography variant="body2" sx={{ flex: 1 }}>
+            {file.name}
+          </Typography>
+          <IconButton size="small" onClick={() => setFile(null)} sx={{ ml: 1 }}>
+            ✕
+          </IconButton>
+        </Box>
+      )}
+
       {/* Input Section */}
       <Paper
         sx={{
@@ -85,7 +133,12 @@ const ChatMain = ({
       >
         <IconButton component="label">
           <AttachFileIcon />
-          <input type="file" hidden onChange={handleFileChange} />
+          <input
+            type="file"
+            hidden
+            onChange={handleFileChange}
+            onKeyDown={handleKeyPress}
+          />
         </IconButton>
         <TextField
           fullWidth
@@ -95,7 +148,7 @@ const ChatMain = ({
           placeholder="Type a message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
           sx={{
             mx: 1,
             "& .MuiOutlinedInput-root": {
@@ -114,34 +167,7 @@ const ChatMain = ({
             },
           }}
         />
-        {file && (
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: 70,
-              left: 20,
-              right: 20,
-              bgcolor: "white",
-              p: 2,
-              borderRadius: 2,
-              boxShadow: 3,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <AttachFileIcon sx={{ mr: 1 }} />
-            <Typography variant="body2" sx={{ flex: 1 }}>
-              {file.name}
-            </Typography>
-            <IconButton
-              size="small"
-              onClick={() => setFile(null)}
-              sx={{ ml: 1 }}
-            >
-              ✕
-            </IconButton>
-          </Box>
-        )}
+
         <IconButton
           color="primary"
           onClick={handleSendMessage}
@@ -153,7 +179,7 @@ const ChatMain = ({
           }}
         >
           {loading ? (
-            <CircularProgress size={24} sx={{ color: "white" }} />
+            <CircularProgress size={24} sx={{ color: "black" }} />
           ) : (
             <SendIcon />
           )}

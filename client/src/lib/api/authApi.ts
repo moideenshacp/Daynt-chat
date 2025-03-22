@@ -2,6 +2,7 @@ import { Isignin } from "@/interface/IsignIn";
 import { Isignup } from "@/interface/IsignUp";
 import axios, { AxiosError } from "axios";
 
+//register
 export const registerUser = async (formData: Isignup) => {
   try {
     const res = await axios.post(
@@ -26,6 +27,7 @@ export const registerUser = async (formData: Isignup) => {
   }
 };
 
+//login
 export const loginUser = async (formData: Isignin) => {
   try {
     const res = await axios.post(

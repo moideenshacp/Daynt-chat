@@ -27,6 +27,8 @@ export const useAuthForm = (type: "signup" | "signin") => {
     setErrors({});
     setGeneralError(null);
   };
+
+  //handling signup -sign in
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});

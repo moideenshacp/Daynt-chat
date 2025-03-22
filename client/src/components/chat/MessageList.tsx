@@ -23,6 +23,8 @@ const MessagesList = ({
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
+
+  //format the data of message
   const formatDate = (date: Date) => {
     const today = new Date();
     const yesterday = new Date(today);
@@ -60,6 +62,7 @@ const MessagesList = ({
           const showDateSeparator = messageDate !== lastDate;
           lastDate = messageDate;
 
+          
           return (
             <Box key={msg.id} sx={{ width: "100%" }}>
               {showDateSeparator && (
@@ -146,8 +149,8 @@ const MessagesList = ({
                         <Image
                           src={msg.file}
                           alt="Sent file"
-                          width={300} // Set  width
-                          height={200} // Set  height
+                          width={300} 
+                          height={200}
                           style={{ borderRadius: 8, objectFit: "contain" }}
                           priority
                         />

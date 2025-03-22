@@ -31,6 +31,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [connectedUsers, setConnectedUsers] = useState<GroupMember[]>([]);
   const { user } = useSelector((state: RootState) => state.user);
 
+
+  //socker set-up
   useEffect(() => {
     if (!user) return;
 
@@ -96,6 +98,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     getMessages();
   }, [user]);
 
+
+  //send message
   const sendMessage = async (text: string, file?: File | null) => {
     if (!socket) return;
   
